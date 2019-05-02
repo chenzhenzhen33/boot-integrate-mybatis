@@ -70,3 +70,58 @@ spring:
 ```
 
 3. 编写Mapper和对应的Entity对象。
+
+### Mybatis 怎么创建多数据源
+1. 在配置文件中配置多个数据源
+```
+spring:
+  datasource:
+    test:
+      jdbc-url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: root
+      password: 1234
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    learn:
+      jdbc-url: jdbc:mysql://localhost:3306/learn?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: root
+      password: 1234
+      driver-class-name: com.mysql.cj.jdbc.Driver
+```
+2. 为mybatis创建基于java的Spring配置（数据源配置），@See TestDataSourceConfig
+    1. 创建数据源
+    2. 创建SqlSessionFactory
+    3. 创建SqlSessionTemplate
+    4. 创建事务管理器DataSourceTransactionManager
+    
+3. 在步骤2的配置类上标注扫描@MapperScan
+```
+@Configuration
+@MapperScan(basePackages="com.lucy.mapper.learn", sqlSessionTemplateRef="learnSqlSessionTemplate")
+public class LearnDataSourceConfig {
+
+    @Bean("learnDataSource")
+    @ConfigurationProperties("spring.datasource.learn")
+    public DataSource learnDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean("learnSqlSessionFactory")
+    public SqlSessionFactory learnSqlSessionFactory(@Qualifier("learnDataSource") DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sqlSessionfactoryBean = new SqlSessionFactoryBean();
+        sqlSessionfactoryBean.setDataSource(dataSource);
+
+        return sqlSessionfactoryBean.getObject();
+    }
+
+    @Bean("learnSqlSessionTemplate")
+    public SqlSessionTemplate learnSqlSessionTemplate(@Qualifier("learnSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean("learnDataSourceTransactionManager")
+    public DataSourceTransactionManager learnDataSourceTransactionManager(@Qualifier("learnDataSource") DataSource dataSource) {
+        return  new DataSourceTransactionManager(dataSource);
+    }
+
+}
+```

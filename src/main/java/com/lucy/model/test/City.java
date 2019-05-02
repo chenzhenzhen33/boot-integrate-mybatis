@@ -1,4 +1,4 @@
-package com.lucy.model;
+package com.lucy.model.test;
 
 import lombok.Data;
 

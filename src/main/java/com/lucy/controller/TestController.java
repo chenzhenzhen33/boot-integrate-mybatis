@@ -1,13 +1,14 @@
 package com.lucy.controller;
 
-import com.lucy.mapper.CityMapper;
-import com.lucy.model.City;
+import com.lucy.mapper.learn.CompanyMapper;
+import com.lucy.mapper.test.CityMapper;
+import com.lucy.model.learn.Company;
+import com.lucy.model.test.City;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/city")
 public class TestController {
 
     @Autowired

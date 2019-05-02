@@ -1,6 +1,6 @@
-package com.lucy.mapper;
+package com.lucy.mapper.test;
 
-import com.lucy.model.City;
+import com.lucy.model.test.City;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
